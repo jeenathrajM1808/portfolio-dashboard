@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --bg-main:#020617;
+            --bg-secondary:#0f172a;
+            --glass:rgba(255,255,255,0.05);
+            --glass-border:rgba(255,255,255,0.08);
+            --primary:#3b82f6;
+            --text:#ffffff;
+            --text-secondary:#94a3b8;
+            --shadow:0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(
+                to bottom right,
+                #020617,
+                #0f172a,
+                #111827
+            );
+            color:var(--text);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+
+        .dashboard{
+            display:grid;
+            grid-template-columns:260px 1fr 320px;
+            min-height:100vh;
+            gap:20px;
+            padding:20px;
+        }
+
+        .glass{
+            background:var(--glass);
+            border:1px solid var(--glass-border);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            box-shadow:var(--shadow);
+        }
+
+        .sidebar{
+            border-radius:30px;
+            padding:25px 20px;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:40px;
+        }
+
+        .logo span{
+            color:var(--primary);
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
+
+        .menu-item{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            padding:16px 18px;
+            border-radius:16px;
+            cursor:pointer;
+            transition:0.3s ease;
+        }
+
+        .menu-item:hover,
+        .menu-item.active{
+            background:rgba(59,130,246,0.2);
+            border:1px solid rgba(59,130,246,0.4);
+        }
+
+        .menu-item img{
+            width:22px;
+            height:22px;
+        }
+
+        .menu-item h3{
+            font-size:15px;
+            font-weight:500;
+        }
+
+        .theme-box{
+            padding:20px;
+            border-radius:20px;
+            margin-top:40px;
+        }
+
+        .theme-box h4{
+            margin-bottom:15px;
+            color:var(--text-secondary);
+        }
+
+        .theme-colors{
+            display:flex;
+            gap:12px;
+        }
+
+        .theme-colors span{
+            width:22px;
+            height:22px;
+            border-radius:50%;
+            cursor:pointer;
+        }
+
+        .theme-colors span:nth-child(1){
+            background:#3b82f6;
+        }
+
+        .theme-colors span:nth-child(2){
+            background:#8b5cf6;
+        }
+
+        .theme-colors span:nth-child(3){
+            background:#22c55e;
+        }
+
+        .theme-colors span:nth-child(4){
+            background:#f97316;
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content{
+            display:flex;
+            flex-direction:column;
+            gap:20px;
+        }
+
+        .topbar{
+            height:80px;
+            border-radius:24px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 25px;
+        }
+
+        .search-box{
+            width:320px;
+            height:50px;
+            border-radius:16px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.08);
+            padding:0 20px;
+            color:white;
+            outline:none;
+        }
+
+        .profile-mini{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .profile-mini img{
+            width:45px;
+            height:45px;
+            border-radius:50%;
+            object-fit:cover;
+        }
+
+        .hero{
+            display:grid;
+            grid-template-columns:1.5fr 1fr;
+            gap:20px;
+        }
+
+        .hero-card{
+            border-radius:30px;
+            padding:30px;
+            display:flex;
+            align-items:center;
+            gap:25px;
+        }
+
+        .hero-card img{
+            width:140px;
+            height:140px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-content h1{
+            font-size:38px;
+            margin-bottom:10px;
+        }
+
+        .hero-content h3{
+            color:var(--primary);
+            margin-bottom:15px;
+            font-weight:500;
+        }
+
+        .hero-content p{
+            color:var(--text-secondary);
+            line-height:1.7;
+            margin-bottom:25px;
+        }
+
+        .hero-buttons{
+            display:flex;
+            gap:15px;
+        }
+
+        .btn{
+            padding:14px 24px;
+            border:none;
+            border-radius:14px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.3s ease;
+        }
+
+        .primary-btn{
+            background:var(--primary);
+            color:white;
+        }
+
+        .secondary-btn{
+            background:transparent;
+            color:white;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn:hover{
+            transform:translateY(-3px);
+        }
+
+        .stats{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+        }
+
+        .stat-card{
+            border-radius:24px;
+            padding:25px;
+        }
+
+        .stat-card h1{
+            font-size:38px;
+            margin-bottom:10px;
+        }
+
+        .stat-card p{
+            color:var(--text-secondary);
+        }
+
+        .bottom-section{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+        }
+
+        .skills,
+        .projects{
+            border-radius:30px;
+            padding:25px;
+        }
+
+        .section-title{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:25px;
+        }
+
+        .section-title h2{
+            font-size:22px;
+        }
+
+        .skill{
+            margin-bottom:25px;
+        }
+
+        .skill-info{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+        }
+
+        .progress-bar{
+            width:100%;
+            height:10px;
+            background:rgba(255,255,255,0.05);
+            border-radius:20px;
+            overflow:hidden;
+        }
+
+        .progress{
+            height:100%;
+            background:linear-gradient(to right,#3b82f6,#8b5cf6);
+            border-radius:20px;
+        }
+
+        .project-card{
+            padding:18px;
+            border-radius:20px;
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,0.05);
+            margin-bottom:18px;
+        }
+
+        .project-card h3{
+            margin-bottom:10px;
+        }
+
+        .project-card p{
+            color:var(--text-secondary);
+            line-height:1.6;
+            margin-bottom:15px;
+        }
+
+        .tech-stack{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .tech-stack span{
+            background:rgba(59,130,246,0.15);
+            color:#93c5fd;
+            padding:8px 12px;
+            border-radius:10px;
+            font-size:13px;
+        }
+
+        /* RIGHT PANEL */
+
+        .right-panel{
+            display:flex;
+            flex-direction:column;
+            gap:20px;
+        }
+
+        .customize,
+        .activity,
+        .contact-card{
+            border-radius:30px;
+            padding:25px;
+        }
+
+        .customize h2,
+        .activity h2,
+        .contact-card h2{
+            margin-bottom:25px;
+        }
+
+        .theme-preview{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:15px;
+        }
+
+        .theme-card{
+            height:100px;
+            border-radius:18px;
+            border:2px solid rgba(255,255,255,0.08);
+            cursor:pointer;
+            transition:0.3s ease;
+        }
+
+        .theme-card:hover{
+            transform:scale(1.03);
+            border-color:var(--primary);
+        }
+
+        .theme-card.blue{
+            background:linear-gradient(to bottom right,#1d4ed8,#1e293b);
+        }
+
+        .theme-card.purple{
+            background:linear-gradient(to bottom right,#7c3aed,#1e1b4b);
+        }
+
+        .theme-card.green{
+            background:linear-gradient(to bottom right,#16a34a,#052e16);
+        }
+
+        .theme-card.orange{
+            background:linear-gradient(to bottom right,#ea580c,#431407);
+        }
+
+        .activity-item{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:18px;
+        }
+
+        .activity-item p{
+            color:var(--text-secondary);
+        }
+
+        .contact-card a{
+            display:block;
+            text-decoration:none;
+            color:var(--text-secondary);
+            margin-bottom:15px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1400px){
+
+            .dashboard{
+                grid-template-columns:240px 1fr;
+            }
+
+            .right-panel{
+                grid-column:1 / -1;
+                display:grid;
+                grid-template-columns:1fr 1fr 1fr;
+            }
+        }
+
+        @media(max-width:992px){
+
+            .dashboard{
+                grid-template-columns:1fr;
+            }
+
+            .sidebar{
+                display:none;
+            }
+
+            .hero{
+                grid-template-columns:1fr;
+            }
+
+            .bottom-section{
+                grid-template-columns:1fr;
+            }
+
+            .right-panel{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:768px){
+
+            .topbar{
+                flex-direction:column;
+                height:auto;
+                padding:20px;
+                gap:20px;
+            }
+
+            .search-box{
+                width:100%;
+            }
+
+            .hero-card{
+                flex-direction:column;
+                text-align:center;
+            }
+
+            .hero-buttons{
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+
+            .stats{
+                grid-template-columns:1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar glass">
+
+            <div>
+
+                <div class="logo">
+                    <span>Dev</span>Dash
+                </div>
+
+                <div class="menu">
+
+                    <div class="menu-item active">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1946/1946488.png">
+                        <h3>Dashboard</h3>
+                    </div>
+
+                    <div class="menu-item">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png">
+                        <h3>Projects</h3>
+                    </div>
+
+                    <div class="menu-item">
+                        <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
+                        <h3>Messages</h3>
+                    </div>
+
+                    <div class="menu-item">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png">
+                        <h3>Settings</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="theme-box glass">
+                <h4>Theme Colors</h4>
+
+                <div class="theme-colors">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <div class="topbar glass">
+
+                <input type="text" class="search-box" placeholder="Search anything...">
+
+                <div class="profile-mini">
+                    <img src="_IO_7792.JPG">
+
+                    <div>
+                        <h3>John Doe</h3>
+                        <p style="color:var(--text-secondary); font-size:14px;">
+                            Frontend Developer
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <section class="hero">
+
+                <div class="hero-card glass">
+
+                    <img src="_IO_7792.JPG">
+
+                    <div class="hero-content">
+                        <h1>Hi, I'm John Doe</h1>
+
+                        <h3>MERN Stack Developer</h3>
+
+                        <p>
+                            I build modern responsive web applications with clean UI,
+                            scalable architecture, and optimized performance.
+                        </p>
+
+                        <div class="hero-buttons">
+                            <button class="btn primary-btn">Download CV</button>
+                            <button class="btn secondary-btn">View Projects</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat-card glass">
+                        <h1>15+</h1>
+                        <p>Projects Completed</p>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <h1>2+</h1>
+                        <p>Years Experience</p>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <h1>10+</h1>
+                        <p>Technologies</p>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <h1>20+</h1>
+                        <p>Clients Worked</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="bottom-section">
+
+                <div class="skills glass">
+
+                    <div class="section-title">
+                        <h2>Technical Skills</h2>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>HTML</span>
+                            <span>95%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress" style="width:95%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>CSS</span>
+                            <span>90%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress" style="width:90%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>JavaScript</span>
+                            <span>85%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress" style="width:85%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>React</span>
+                            <span>80%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress" style="width:80%"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="projects glass">
+
+                    <div class="section-title">
+                        <h2>Recent Projects</h2>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>Portfolio Dashboard</h3>
+
+                        <p>
+                            Modern developer portfolio with glassmorphism UI and responsive dashboard.
+                        </p>
+
+                        <div class="tech-stack">
+                            <span>HTML</span>
+                            <span>CSS</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>Task Manager App</h3>
+
+                        <p>
+                            Productivity dashboard with authentication and task tracking system.
+                        </p>
+
+                        <div class="tech-stack">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- RIGHT PANEL -->
+
+        <aside class="right-panel">
+
+            <div class="customize glass">
+
+                <h2>Customize UI</h2>
+
+                <div class="theme-preview">
+                    <div class="theme-card blue"></div>
+                    <div class="theme-card purple"></div>
+                    <div class="theme-card green"></div>
+                    <div class="theme-card orange"></div>
+                </div>
+
+            </div>
+
+            <div class="activity glass">
+
+                <h2>Recent Activity</h2>
+
+                <div class="activity-item">
+                    <div>
+                        <h4>Portfolio Updated</h4>
+                        <p>Dashboard UI redesign</p>
+                    </div>
+                    <span>2h ago</span>
+                </div>
+
+                <div class="activity-item">
+                    <div>
+                        <h4>GitHub Push</h4>
+                        <p>Uploaded new project</p>
+                    </div>
+                    <span>5h ago</span>
+                </div>
+
+                <div class="activity-item">
+                    <div>
+                        <h4>Certificate Added</h4>
+                        <p>MERN Stack Internship</p>
+                    </div>
+                    <span>1d ago</span>
+                </div>
+
+            </div>
+
+            <div class="contact-card glass">
+
+                <h2>Contact</h2>
+
+                <a href="#">jeenathraj70@gmail.com</a>
+                <a href="#"></a>
+                <a href="#"></a>
+                <a href="#">+91 91504608044</a>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</body>
+</html>
+```
